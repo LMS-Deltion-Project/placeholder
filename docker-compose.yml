@@ -1,0 +1,56 @@
+version: '3.9'
+
+services:
+  lms-database:
+    # Registers hostname in localdev network this must be unique
+    hostname: ${POSTGRES_HOST}
+    image: postgres:latest
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - TZ=${TIME_ZONE}
+    restart: always
+    ports:
+      - ${DOCKER_DB_PORT:-5433}:${POSTGRES_PORT:-5432}
+    networks:
+      - localdev
+    volumes:
+      - lms-database:/var/lib/postgresql/data
+    env_file:
+      - ./.env
+
+  lms-api:
+    image: mcr.microsoft.com/dotnet/sdk:7.0
+    depends_on:
+      - lms-database
+    ports:
+      - "${DOTNET_PORT-5233}:443"
+    networks:
+      - localdev
+    environment:
+      - DOTNET_WATCH_RESTART_ON_RUDE_EDIT=1
+      - ASPNETCORE_ENVIRONMENT=Development
+      - TZ=${TIME_ZONE}
+      - ConnectionStrings__DefaultConnection=User ID=${POSTGRES_USER};Password=${POSTGRES_PASSWORD};Server=${POSTGRES_HOST};Port=${POSTGRES_PORT};Database=${POSTGRES_DB}; IntegratedSecurity=true;Pooling=true;
+      - DOTNET_CLI_TELEMETRY_OPTOUT = 1
+      - PATH="$PATH:/root/.dotnet/tools"
+    volumes:
+      - "lms-api:/app"
+    working_dir: /app/lms/
+    command: dotnet watch
+    tty: true
+    secrets:
+      - host_ssh_key
+      - host_known_hosts
+    env_file:
+      - ./.env
+
+networks:
+  localdev:
+    external: true
+
+volumes:
+  lms-database:
+  lms-api:
+    
