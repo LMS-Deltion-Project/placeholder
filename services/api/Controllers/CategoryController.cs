@@ -19,7 +19,7 @@ public class CategoryController : ControllerBase
     }
 
     [HttpPost(Name = "Create")]
-    public IEnumerable<Category> Get()
+    public IEnumerable<Category> Create()
     {
         CategoryContext db = new CategoryContext();
 

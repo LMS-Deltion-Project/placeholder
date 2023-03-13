@@ -12,7 +12,7 @@ services:
       - TZ=${TIME_ZONE}
     restart: always
     ports:
-      - ${DOCKER_DB_PORT:-5433}:${POSTGRES_PORT:-5432}
+      - ${POSTGRES_PORT:-5433}:5432
     networks:
       - localdev
     volumes:

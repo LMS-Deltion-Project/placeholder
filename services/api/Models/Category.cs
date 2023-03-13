@@ -9,4 +9,9 @@ public class Category
 public class CategoryContext : DbContext
 {
     public DbSet<Category> Categories { get; set; }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        optionsBuilder.UseNpgsql("Host=lms-database-1; Database=lms; Username=lms; Password=lms;");
+    }
 }

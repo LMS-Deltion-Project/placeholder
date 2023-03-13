@@ -8,6 +8,7 @@ COPY ./services/api ./
 # Installs Entity Framework, related CLI tools and the PostgreSQL driver.
 RUN dotnet tool install --global dotnet-ef
 RUN dotnet add package Microsoft.EntityFrameworkCore
+RUN dotnet add package Microsoft.EntityFrameworkCore.Analyzers
 RUN dotnet add package Microsoft.EntityFrameworkCore.Design
 RUN dotnet add package Npgsql.EntityFrameworkCore.PostgreSQL
 
