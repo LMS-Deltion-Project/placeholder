@@ -1,7 +1,7 @@
 version: '3.9'
 
 services:
-  lms-database:
+  database:
     # Registers hostname in localdev network this must be unique
     hostname: ${POSTGRES_HOST}
     image: postgres:latest
@@ -20,12 +20,15 @@ services:
     env_file:
       - ./.env
 
-  lms-api:
+  api:
     image: mcr.microsoft.com/dotnet/sdk:7.0
+    build: 
+      context: .
+      dockerfile: ./docker/api/Dockerfile
     depends_on:
-      - lms-database
+      - database
     ports:
-      - "${DOTNET_PORT-5233}:443"
+      - "${DOTNET_PORT-5005}:5005"
     networks:
       - localdev
     environment:
@@ -34,23 +37,35 @@ services:
       - TZ=${TIME_ZONE}
       - ConnectionStrings__DefaultConnection=User ID=${POSTGRES_USER};Password=${POSTGRES_PASSWORD};Server=${POSTGRES_HOST};Port=${POSTGRES_PORT};Database=${POSTGRES_DB}; IntegratedSecurity=true;Pooling=true;
       - DOTNET_CLI_TELEMETRY_OPTOUT = 1
-      - PATH="$PATH:/root/.dotnet/tools"
     volumes:
-      - "lms-api:/app"
-    working_dir: /app/lms/
+      - ./services/api:/api
+    working_dir: /api
     command: dotnet watch
     tty: true
-    secrets:
-      - host_ssh_key
-      - host_known_hosts
     env_file:
       - ./.env
+    restart: always
+
+  web:
+    build:
+      context: .
+      dockerfile: ./docker/web/Dockerfile
+    depends_on:
+      - api
+    restart: always
+    volumes:
+      - ./services/web:/web
+    tty: true
+    ports:
+      - ${NODE_PORT:-81}:5173
+    env_file:
+      - ./.env
+    networks:
+      - localdev
+    
 
 networks:
   localdev:
-    external: true
 
 volumes:
   lms-database:
-  lms-api:
-    
