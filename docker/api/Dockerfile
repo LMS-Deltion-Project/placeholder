@@ -1,5 +1,5 @@
 # https://hub.docker.com/_/microsoft-dotnet
-FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:7.0-alpine AS build
 
 WORKDIR /api
 
@@ -14,4 +14,4 @@ RUN dotnet tool install --global dotnet-ef
 
 RUN PATH="$PATH:/root/.dotnet/tools"
 
-CMD [ "dotnet", "watch" ]
+CMD [ "dotnet", "watch", "--no-hot-reload" ]

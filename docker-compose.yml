@@ -28,7 +28,7 @@ services:
     depends_on:
       - database
     ports:
-      - "${DOTNET_PORT-5005}:5005"
+      - "${DOTNET_PORT:-5005}:5005"
     networks:
       - localdev
     environment:
@@ -39,8 +39,6 @@ services:
       - DOTNET_CLI_TELEMETRY_OPTOUT = 1
     volumes:
       - ./services/api:/api
-    working_dir: /api
-    command: dotnet watch
     tty: true
     env_file:
       - ./.env
