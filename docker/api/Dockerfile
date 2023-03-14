@@ -13,7 +13,7 @@ RUN dotnet add package Microsoft.EntityFrameworkCore.Design
 RUN dotnet add package Npgsql.EntityFrameworkCore.PostgreSQL
 
 # Adds the Entity Framework CLI tools to our path.
-RUN PATH="$PATH:/root/.dotnet/tools"
+ENV PATH="${PATH}:/root/.dotnet/tools"
 
 # No hot-reload to get full coverage of our changes. Takes longer to build.
 CMD [ "dotnet", "watch", "--no-hot-reload" ]
