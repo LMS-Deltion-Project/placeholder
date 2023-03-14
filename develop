@@ -25,7 +25,7 @@ elif [ ${ENTRY_POINT} == "dotnet" ]; then
         docker exec -it "${DOCKER_CONTAINER_PREFIX}-api-1" rm -rf bin/Debug;
         
         echo "bin/Debug directory has been deleted.";
-        exit;
+        exit 0;
     fi
 
     exit 1;
