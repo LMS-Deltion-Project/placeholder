@@ -22,7 +22,6 @@ services:
       - ./.env
 
   api:
-    image: mcr.microsoft.com/dotnet/sdk:7.0
     build: 
       context: .
       dockerfile: ./docker/api/Dockerfile
