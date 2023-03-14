@@ -31,7 +31,9 @@ elif [ ${ENTRY_POINT} == "dotnet" ]; then
     docker exec -it "${DOCKER_CONTAINER_PREFIX}-api-1" dotnet ${USER_ARGS}
 
 elif [ ${ENTRY_POINT} == "psql" ]; then
-    docker exec -it "${DOCKER_CONTAINER_PREFIX}-database-1" psql -U lms -d lms ${USER_ARGS};
+    source ./.env
+
+    docker exec -it "${DOCKER_CONTAINER_PREFIX}-database-1" psql -U ${POSTGRES_USER} -d ${POSTGRES_DB} ${USER_ARGS};
 elif [ ${ENTRY_POINT} == "npm" ]; then
     docker exec -it "${DOCKER_CONTAINER_PREFIX}-web-1" npm ${USER_ARGS};
 elif [ ${ENTRY_POINT} == "node" ]; then
