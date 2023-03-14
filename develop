@@ -18,14 +18,16 @@ elif [ ${ENTRY_POINT} == "dotnet" ]; then
         exit 1;
     fi
 
-    echo "Could not execute command properly. Do you wish to remove the bin/Debug directory? [Y\n]";
+    echo "Could not execute command properly. Do you wish to remove the bin/Debug directory and rerun the initial command? [Y\n]";
     read;
 
     if echo ${REPLY} | grep -q -e "[Yy]"; then
         docker exec -it "${DOCKER_CONTAINER_PREFIX}-api-1" rm -rf bin/Debug;
         
         echo "bin/Debug directory has been deleted.";
-        exit 0;
+
+        docker exec -it "${DOCKER_CONTAINER_PREFIX}-api-1" dotnet ${USER_ARGS}
+        exit;
     fi
 
     exit 1;
